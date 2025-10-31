@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CHR Chatroom</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <style>
+    body {
+      margin: 0;
+      background-color: #121212;
+      color: #e0e0e0;
+      font-family: "Segoe UI", sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    #chat-container {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    #users {
+      width: 200px;
+      background: #1e1e1e;
+      padding: 10px;
+      border-right: 1px solid #333;
+      overflow-y: auto;
+    }
+
+    #users h3 {
+      margin-top: 0;
+      color: #8ab4f8;
+      font-size: 1em;
+    }
+
+    #messages {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+    }
+
+    #messages div {
+      margin: 5px 0;
+    }
+
+    #messages .system {
+      color: #ff6666;
+    }
+
+    #form {
+      display: flex;
+      padding: 10px;
+      border-top: 1px solid #333;
+      background: #1e1e1e;
+    }
+
+    #input {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      background: #2a2a2a;
+      color: white;
+      border-radius: 5px;
+      outline: none;
+    }
+
+    #send {
+      padding: 10px 20px;
+      border: none;
+      background: #4a90e2;
+      color: white;
+      margin-left: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    #send:hover {
+      background: #357ab8;
+    }
+  </style>
+</head>
+<body>
+  <div id="chat-container">
+    <div id="users">
+      <h3>Users</h3>
+      <ul id="user-list"></ul>
+    </div>
+    <div id="messages"></div>
+  </div>
+  <form id="form">
+    <input id="input" autocomplete="off" placeholder="Type a message..." />
+    <button id="send">Send</button>
+  </form>
+
+  <script>
+    const socket = io();
+
+    const form = document.getElementById('form');
+    const input = document.getElementById('input');
+    const messages = document.getElementById('messages');
+    const userList = document.getElementById('user-list');
+
+    let username = '';
+
+    // Ask for username
+    while (!username) {
+      username = prompt("Enter a username:")?.trim();
+    }
+
+    socket.emit('set name', username);
+
+    socket.on('chat message', (msg) => {
+      const item = document.createElement('div');
+      item.textContent = msg.user + ": " + msg.text;
+      if (msg.color) item.style.color = msg.color;
+      messages.appendChild(item);
+      messages.scrollTop = messages.scrollHeight;
+    });
+
+    socket.on('user list', (users) => {
+      userList.innerHTML = '';
+      users.forEach((u) => {
+        const li = document.createElement('li');
+        li.textContent = u;
+        userList.appendChild(li);
+      });
+    });
+
+    socket.on('banned', () => {
+      alert("You have been banned from the server.");
+      input.disabled = true;
+    });
+
+    socket.on('kicked', (msg) => {
+      alert(msg);
+      input.disabled = true;
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (input.value) {
+        socket.emit('chat message', input.value);
+        input.value = '';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -14,3 +14,4 @@ The swear filter is still there, so don't cuss people out. Your entire network w
 # CURRENT SITE:
 https://2560ef707015.ngrok-free.app/
 Site may be a bit slow at times.
+Bans last one day at a time. If you accidentally swore, or the filter glitched, unfortunately nobody will do anything about it. LMAOOO

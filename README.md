@@ -12,6 +12,6 @@ Server: Faster, more reliable than V1.3.2, as it being used with a daily NGROK p
 # FILTER
 The swear filter is still there, so don't cuss people out. Your entire network will be banned upon swearing. So...don't swear. Simple.
 # CURRENT SITE:
-https://2560ef707015.ngrok-free.app/
+https://6d25a49b6652.ngrok-free.app/
 Site may be a bit slow at times.
 Bans last one day at a time. If you accidentally swore, or the filter glitched, unfortunately nobody will do anything about it. LMAOOO
